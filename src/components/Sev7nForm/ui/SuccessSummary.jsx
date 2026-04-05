@@ -19,41 +19,39 @@ export default function SuccessSummary({ data, skipped, onReset }) {
   ].filter(([, v]) => v);
 
   return (
-    <div style={{ width: "100%", maxWidth: 680, textAlign: "center", padding: "52px 20px" }}>
-      <div style={{ fontSize: 56, marginBottom: 16 }}>{skipped ? "📋" : "🎉"}</div>
+    <div style={{ width: "100%", textAlign: "left", paddingTop: 20 }}>
+      {skipped ? null : <div style={{ fontSize: 48, marginBottom: 16 }}>🌴</div>}
       <div style={{
-        fontFamily: "'Playfair Display',serif", fontSize: 24,
-        fontWeight: 900, color: "#f5d060", marginBottom: 10
+        fontSize: 32, fontWeight: 700, color: "#2B3B5A", marginBottom: 12, letterSpacing: -0.5
       }}>
-        {skipped ? "Đã ghi nhận khảo sát!" : "Cảm Ơn Quý Đối Tác!"}
+        {skipped ? "Đã lưu thành công" : "Cảm ơn quý đối tác!"}
       </div>
-      <p style={{ color: "#6b7280", fontSize: 14, lineHeight: 1.8, maxWidth: 420, margin: "0 auto 28px" }}>
+      <p style={{ color: "#666666", fontSize: 16, lineHeight: 1.6, marginBottom: 40 }}>
         {skipped
-          ? <>Nhu cầu của <strong style={{ color: "#e2e8f0" }}>{data.businessName}</strong> đã được lưu lại. Liên hệ Sev7n qua Hotline/Zalo bất cứ lúc nào để nhận báo giá.</>
-          : <>Chuyên viên sẽ liên hệ <strong style={{ color: "#c9a227" }}>{data.contactName || data.businessName}</strong> trong <strong style={{ color: "#c9a227" }}>2–4 giờ làm việc</strong>.</>
+          ? <>Hệ thống đã tiếp nhận thông tin từ <strong style={{ color: "#2B3B5A" }}>{data.businessName}</strong>. Cảm ơn đã tham gia khảo sát.</>
+          : <>Hồ sơ chi tiết của <strong style={{ color: "#2B3B5A" }}>{data.businessName}</strong> đã được ghi nhận. Cảm ơn đã tham gia khảo sát.</>
         }
       </p>
-      <div style={{
-        background: "rgba(201,162,39,.06)",
-        border: "1px solid rgba(201,162,39,.18)",
-        borderRadius: 16, padding: "20px 24px", 
-        marginBottom: 28, textAlign: "left"
-      }}>
+
+      <div style={{ marginBottom: 40 }}>
         <div style={{
-          color: "#c9a227", fontSize: 10, fontWeight: 700,
-          letterSpacing: 2, textTransform: "uppercase", marginBottom: 12
+          color: "#6DA396", fontStyle: "italic", fontSize: 13, fontWeight: 700,
+          marginBottom: 16, display: "flex", alignItems: "center", gap: 8
         }}>
-          📋 Tóm Tắt Nhu Cầu
+          Tóm tắt nhu cầu phân tích
         </div>
-        {summary.map(([l, v]) => (
-          <div key={l} className="sr">
-            <div className="sl">{l}</div>
-            <div className="sv">{v}</div>
-          </div>
-        ))}
+        <div style={{ borderTop: "2px solid #f4f5f6" }}>
+          {summary.map(([l, v]) => (
+            <div key={l} className="sr">
+              <div className="sl">{l}</div>
+              <div className="sv">{v}</div>
+            </div>
+          ))}
+        </div>
       </div>
+
       <button className="btn-s" onClick={onReset}>
-        Điền form mới
+        ⟲ Gửi yêu cầu mới
       </button>
     </div>
   );
