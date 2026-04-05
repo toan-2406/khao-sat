@@ -3,7 +3,6 @@ import "./styles/Sev7nForm.css";
 import { STEPS, initialData } from "./constants";
 
 // UI Components
-import FormHeader from "./ui/FormHeader";
 import StepTracker from "./ui/StepTracker";
 import FormNavigation from "./ui/FormNavigation";
 import SuccessSummary from "./ui/SuccessSummary";
@@ -48,13 +47,13 @@ export default function Sev7nForm() {
     setIsSubmitting(true);
     try {
       const webhookUrl = import.meta.env.VITE_WEBHOOK_URL;
-      
+
       await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(finalData),
       });
-      
+
       setSubmitted(true);
     } catch (err) {
       console.error("Webhook submission error:", err);
@@ -65,13 +64,13 @@ export default function Sev7nForm() {
     }
   };
 
-  const handleSubmit = () => { 
-    setSkipped(false); 
+  const handleSubmit = () => {
+    setSkipped(false);
     submitToWebhook({ ...data, skipped: false, timestamp: new Date().toISOString() });
   };
 
-  const handleSkip = () => { 
-    setSkipped(true);  
+  const handleSkip = () => {
+    setSkipped(true);
     submitToWebhook({ ...data, skipped: true, timestamp: new Date().toISOString() });
   };
 
@@ -103,51 +102,63 @@ export default function Sev7nForm() {
     <div className="layout-container">
       <div className="form-column">
         <div className="form-wrapper">
-          <FormHeader />
 
           {submitted ? (
-            <SuccessSummary data={data} skipped={skipped} onReset={resetForm} />
+            <div style={{ flex: 1, overflowY: "auto", paddingRight: 4 }}>
+              <SuccessSummary data={data} skipped={skipped} onReset={resetForm} />
+            </div>
           ) : (
-            <div>
-              <StepTracker step={step} setStep={setStep} />
+            <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+              
+              <div style={{ flexShrink: 0, paddingBottom: 10 }}>
+                <StepTracker step={step} setStep={setStep} />
 
-              <div className="step-title">
-                {STEPS[step - 1].title}
+                <div className="step-title">
+                  {STEPS[step - 1].title}
+                </div>
+
+                {step === 7 && (
+                  <div style={{
+                    marginBottom: 16, padding: "14px 18px",
+                    background: "#f0f4f8", border: "1px dashed #cbd5e1",
+                    borderRadius: 8, display: "flex", gap: 12, alignItems: "flex-start"
+                  }}>
+                    <span style={{ fontSize: 20, marginTop: 1 }}>💬</span>
+                    <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>
+                      Bước này <strong style={{ color: "#334155" }}>không bắt buộc</strong>. Bạn có thể điền để được báo giá chi tiết,
+                      hoặc nhấn <em style={{ color: "#6DA396", fontStyle: "normal", fontWeight: 600 }}>"Bỏ qua"</em>.
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {step === 7 && (
-                <div style={{
-                  marginBottom: 16, padding: "14px 18px",
-                  background: "#f0f4f8", border: "1px dashed #cbd5e1",
-                  borderRadius: 8, display: "flex", gap: 12, alignItems: "flex-start"
-                }}>
-                  <span style={{ fontSize: 20, marginTop: 1 }}>💬</span>
-                  <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>
-                    Bước này <strong style={{ color: "#334155" }}>không bắt buộc</strong>. Bạn có thể điền để được báo giá chi tiết,
-                    hoặc nhấn <em style={{ color: "#6DA396", fontStyle: "normal", fontWeight: 600 }}>"Bỏ qua"</em> — Sev7n sẽ chủ động liên hệ.
-                  </div>
-                </div>
-              )}
+              {/* Middle Content - Scrollable */}
+              <div 
+                className="scroll-area" 
+                style={{ flex: 1, overflowY: "auto", paddingRight: 8, marginRight: -8, paddingBottom: 20 }}
+              >
+                {renderStep()}
+              </div>
 
-              {/* Form Content */}
-              {renderStep()}
-
-              <FormNavigation 
-                step={step} 
-                prev={prev} 
-                next={next} 
-                handleSubmit={handleSubmit} 
-                handleSkip={handleSkip} 
-                isSubmitting={isSubmitting}
-              />
+              {/* Bottom Navigation - Fixed */}
+              <div style={{ flexShrink: 0, paddingTop: 16, borderTop: "1px solid #f0f4f8" }}>
+                <FormNavigation
+                  step={step}
+                  prev={prev}
+                  next={next}
+                  handleSubmit={handleSubmit}
+                  handleSkip={handleSkip}
+                  isSubmitting={isSubmitting}
+                />
+              </div>
             </div>
           )}
         </div>
       </div>
-      
+
       {/* Right Column Image Area */}
-      <div 
-        className="image-column" 
+      <div
+        className="image-column"
         style={{ backgroundImage: getBgImage(), transition: "background-image 0.5s ease-in-out" }}
       ></div>
     </div>

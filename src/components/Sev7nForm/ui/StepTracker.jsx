@@ -3,8 +3,8 @@ import { STEPS } from "../constants";
 export default function StepTracker({ step, setStep }) {
   return (
     <div style={{
-      display: "flex", alignItems: "center", marginBottom: 36,
-      width: "100%", maxWidth: 360, paddingBottom: 8
+      display: "flex", alignItems: "center", marginBottom: 16,
+      width: "100%", maxWidth: 360, paddingBottom: 0
     }}>
       {STEPS.map((s, i) => {
         const isPast = step > s.id;

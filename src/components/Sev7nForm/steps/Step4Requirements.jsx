@@ -14,11 +14,11 @@ export default function Step4Requirements({ data, set }) {
       {data.needScent && data.needScent !== "Không quan trọng" && (
         <div className="fg">
           <label className="fl">Loại mùi hương</label>
-          <RadioGroup 
-            field="scentType" 
-            opts={["Floral (Hoa tươi)", "Fresh (Biển / Gió)", "Woody (Gỗ / Mộc)", "Citrus (Cam chanh)", "Neutral (Nhẹ nhàng)", "Để Sev7n tư vấn"]} 
-            data={data} 
-            set={set} 
+          <RadioGroup
+            field="scentType"
+            opts={["Floral (Hoa tươi)", "Fresh (Biển / Gió)", "Woody (Gỗ / Mộc)", "Citrus (Cam chanh)", "Neutral (Nhẹ nhàng)", "Tư vấn"]}
+            data={data}
+            set={set}
           />
         </div>
       )}
@@ -32,12 +32,12 @@ export default function Step4Requirements({ data, set }) {
       </div>
       <div className="fg">
         <label className="fl">Yêu cầu đặc biệt khác</label>
-        <textarea 
-          className="fi" 
-          rows={3} 
-          placeholder="VD: không dùng chlorine, gói riêng từng phòng, dán nhãn số phòng..." 
-          value={data.specialNote} 
-          onChange={e => set("specialNote", e.target.value)} 
+        <textarea
+          className="fi"
+          rows={3}
+          placeholder="VD: không dùng chlorine, gói riêng từng phòng, dán nhãn số phòng..."
+          value={data.specialNote}
+          onChange={e => set("specialNote", e.target.value)}
           style={{ resize: "vertical" }}
         />
       </div>
