@@ -23,6 +23,7 @@ export default function Sev7nForm() {
   const [submitted, setSubmitted] = useState(false);
   const [skipped, setSkipped] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const set = (key, val) => setData(d => ({ ...d, [key]: val }));
   const toggleItem = (key) => setData(d => ({ ...d, items: { ...d.items, [key]: !d.items[key] } }));
@@ -42,9 +43,39 @@ export default function Sev7nForm() {
 
   const next = () => { if (validate()) setStep(s => Math.min(s + 1, 7)); };
   const prev = () => { setStep(s => Math.max(s - 1, 1)); setErrors({}); };
-  const handleSubmit = () => { setSkipped(false); setSubmitted(true); };
-  const handleSkip   = () => { setSkipped(true);  setSubmitted(true); };
-  const resetForm    = () => { setSubmitted(false); setSkipped(false); setStep(1); setData(initialData); };
+
+  const submitToWebhook = async (finalData) => {
+    setIsSubmitting(true);
+    try {
+      const webhookUrl = import.meta.env.VITE_WEBHOOK_URL;
+      
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(finalData),
+      });
+      
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Webhook submission error:", err);
+      // Show success screen anyway to not break user flow, but log error
+      setSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmit = () => { 
+    setSkipped(false); 
+    submitToWebhook({ ...data, skipped: false, timestamp: new Date().toISOString() });
+  };
+
+  const handleSkip = () => { 
+    setSkipped(true);  
+    submitToWebhook({ ...data, skipped: true, timestamp: new Date().toISOString() });
+  };
+
+  const resetForm = () => { setSubmitted(false); setSkipped(false); setStep(1); setData(initialData); };
 
   const renderStep = () => {
     const props = { data, set, errors, toggleItem };
@@ -138,6 +169,7 @@ export default function Sev7nForm() {
               next={next} 
               handleSubmit={handleSubmit} 
               handleSkip={handleSkip} 
+              isSubmitting={isSubmitting}
             />
           </div>
 
